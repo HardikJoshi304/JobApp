@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css';
 
-const API_URL = import.meta.env.VITE_API_URL;
+// Get API URL from environment variable
+const API_URL = import.meta.env.VITE_API_URL || process.env.REACT_APP_API_URL;  // Ensuring it works in both setups
 
 function App() {
   const [jobs, setJobs] = useState([]);
@@ -34,7 +35,7 @@ function App() {
     fetchJobs();
   }, [filter]);
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post(API_URL, form);
@@ -54,7 +55,7 @@ function App() {
     }
   };
 
-  const deleteJob = async id => {
+  const deleteJob = async (id) => {
     try {
       await axios.delete(`${API_URL}/${id}`);
       fetchJobs();
@@ -68,22 +69,52 @@ function App() {
       <h1 className="app-title">Student Job Tracker</h1>
 
       <form onSubmit={handleSubmit} className="form-container">
-        <input className="input" placeholder="Company" value={form.company} onChange={e => setForm({ ...form, company: e.target.value })} />
-        <input className="input" placeholder="Role" value={form.role} onChange={e => setForm({ ...form, role: e.target.value })} />
-        <input className="input" type="date" value={form.dateOfApplication} onChange={e => setForm({ ...form, dateOfApplication: e.target.value })} />
-        <input className="input" placeholder="Link" value={form.link} onChange={e => setForm({ ...form, link: e.target.value })} />
-        <select className="input" value={form.status} onChange={e => setForm({ ...form, status: e.target.value })}>
+        <input
+          className="input"
+          placeholder="Company"
+          value={form.company}
+          onChange={(e) => setForm({ ...form, company: e.target.value })}
+        />
+        <input
+          className="input"
+          placeholder="Role"
+          value={form.role}
+          onChange={(e) => setForm({ ...form, role: e.target.value })}
+        />
+        <input
+          className="input"
+          type="date"
+          value={form.dateOfApplication}
+          onChange={(e) => setForm({ ...form, dateOfApplication: e.target.value })}
+        />
+        <input
+          className="input"
+          placeholder="Link"
+          value={form.link}
+          onChange={(e) => setForm({ ...form, link: e.target.value })}
+        />
+        <select
+          className="input"
+          value={form.status}
+          onChange={(e) => setForm({ ...form, status: e.target.value })}
+        >
           <option>Applied</option>
           <option>Interview</option>
           <option>Offer</option>
           <option>Rejected</option>
         </select>
-        <button className="submit-button" type="submit">Add Job</button>
+        <button className="submit-button" type="submit">
+          Add Job
+        </button>
       </form>
 
       <div className="filter-container">
         <label className="filter-label">Filter by Status:</label>
-        <select className="input" value={filter} onChange={e => setFilter(e.target.value)}>
+        <select
+          className="input"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
           <option value="">All</option>
           <option value="Applied">Applied</option>
           <option value="Interview">Interview</option>
@@ -94,24 +125,47 @@ function App() {
 
       <ul className="job-list">
         {Array.isArray(jobs) ? (
-          jobs.map(job => (
+          jobs.map((job) => (
             <li key={job._id} className="job-card">
-              <div className="job-header">{job.company} - {job.role}</div>
-              <div className="job-info">Status: {job.status} | {new Date(job.dateOfApplication).toLocaleDateString()}</div>
-              <a className="job-link" href={job.link} target="_blank" rel="noreferrer">View Link</a>
+              <div className="job-header">
+                {job.company} - {job.role}
+              </div>
+              <div className="job-info">
+                Status: {job.status} |{' '}
+                {new Date(job.dateOfApplication).toLocaleDateString()}
+              </div>
+              <a
+                className="job-link"
+                href={job.link}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View Link
+              </a>
               <div className="job-actions">
-                <select className="input" value={job.status} onChange={e => updateStatus(job._id, e.target.value)}>
+                <select
+                  className="input"
+                  value={job.status}
+                  onChange={(e) => updateStatus(job._id, e.target.value)}
+                >
                   <option>Applied</option>
                   <option>Interview</option>
                   <option>Offer</option>
                   <option>Rejected</option>
                 </select>
-                <button className="delete-button" onClick={() => deleteJob(job._id)}>Delete</button>
+                <button
+                  className="delete-button"
+                  onClick={() => deleteJob(job._id)}
+                >
+                  Delete
+                </button>
               </div>
             </li>
           ))
         ) : (
-          <p className="error-text">Unable to load jobs — check the API response format.</p>
+          <p className="error-text">
+            Unable to load jobs — check the API response format.
+          </p>
         )}
       </ul>
     </div>

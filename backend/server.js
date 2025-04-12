@@ -32,6 +32,18 @@ connect(process.env.MONGO_URI, {
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log(err));
 
+  console.log('🛠 Setting up routes...');
+
+app.get('/', (req, res) => {
+  console.log('✅ Root route hit!');
+  res.send('Welcome to the Student Job Tracker API!');
+});
+
+// ✅ Root Route
+app.get('/', (req, res) => {
+  res.send('Welcome to the Student Job Tracker API!');
+});
+
 // ✅ Routes
 app.post('/api/jobs', async (req, res) => {
   try {
