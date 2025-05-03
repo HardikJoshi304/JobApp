@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './App.css';
+import { motion } from 'framer-motion'; // animation
 
-// Get API URL from environment variable
-const API_URL = import.meta.env.VITE_API_URL || process.env.REACT_APP_API_URL;  // Ensuring it works in both setups
+const API_URL = import.meta.env.VITE_API_URL || process.env.REACT_APP_API_URL;
 
 function App() {
   const [jobs, setJobs] = useState([]);
@@ -126,7 +126,13 @@ function App() {
       <ul className="job-list">
         {Array.isArray(jobs) ? (
           jobs.map((job) => (
-            <li key={job._id} className="job-card">
+            <motion.li
+              key={job._id}
+              className="job-card"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+            >
               <div className="job-header">
                 {job.company} - {job.role}
               </div>
@@ -160,7 +166,7 @@ function App() {
                   Delete
                 </button>
               </div>
-            </li>
+            </motion.li>
           ))
         ) : (
           <p className="error-text">
